@@ -3,9 +3,18 @@ import subprocess
 
 WAKE_WORDS = [
     "hey aj",
-    "hey h j",
     "hey a j",
+    "hey h j",
+    "hey h. j.",
+    "aj",
+    "a j",
+    "a.j.",
+    "ahan",
+    "hey ahan",
+    "hey a han",
 ]
+
+
 
 
 def listen():
@@ -19,10 +28,30 @@ def listen():
     return result.stdout.strip().lower()
 
 
-def is_wake_word(text):
-    """Check whether the user said the wake word."""
-    return any(word in text for word in WAKE_WORDS)
 
+def is_wake_word(text):
+    """Check whether the user said a wake word."""
+
+    # Normalize punctuation
+    normalized = (
+        text.lower()
+        .replace(".", " ")
+        .replace(",", " ")
+        .replace("-", " ")
+    )
+
+    # Remove extra spaces
+    normalized = " ".join(normalized.split())
+
+    for word in WAKE_WORDS:
+        word = word.lower().replace(".", " ")
+        word = " ".join(word.split())
+
+        if word in normalized:
+            return True
+
+    return False
+    
 
 def speak(text):
     """Make AJ speak."""
